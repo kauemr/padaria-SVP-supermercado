@@ -297,6 +297,7 @@ footer a:hover{text-decoration:underline}
 <a class="btn azul flutuante" data-zap aria-label="Falar no WhatsApp">WhatsApp</a>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // Edite aqui: número, mensagem, Instagram, rota do Google Maps e política de privacidade.
 const CONFIG = {
@@ -306,6 +307,15 @@ const CONFIG = {
   mapa: 'https://www.google.com/maps/dir/?api=1&destination=Pra%C3%A7a+Jos%C3%A9+Batista,+916,+Montezuma,+MG,+Brasil',
   privacidade: ''
 };
+  
+const SUPABASE_URL = 'https://uskhbafswlerbmsqhbsu.supabase.co/rest/v1/ ';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_IGII5N_ZFExAbRx26FBC-Q_XOUWbUC-';
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
 
 // Ícones ilustrativos das categorias e ofertas (troque por fotos reais quando houver).
 const ICONES = {
