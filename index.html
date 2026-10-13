@@ -480,7 +480,52 @@ function normalizarProduto(p) {
   };
 }
 // Etapa do Supabase: trocar o corpo por uma consulta, mantendo este formato de retorno.
-async function carregarProdutos() { return PRODUTOS.map(normalizarProduto).filter(p => p.ativo); }
+
+async function carregarProdutos() {
+  const { data, error } = await db
+    .from('produtos')
+    .select('id, nome, descricao, preco, imagem, categoria, ativo')
+    .eq('ativo', true);
+
+  if (error) {
+    console.error('Erro ao carregar produtos do Supabase:', error);
+    return [];
+  }
+
+  const categorias = {
+    'pao': 'pao',
+    'pães': 'pao',
+    'paes': 'pao',
+    'padaria': 'pao',
+    'bolo': 'bolo',
+    'bolos': 'bolo',
+    'confeitaria': 'bolo',
+    'mercearia': 'mercearia',
+    'bebidas': 'bebidas',
+    'bebida': 'bebidas',
+    'congelados': 'congelados',
+    'congelado': 'congelados',
+    'dia': 'dia'
+  };
+
+  return data.map(p => {
+    const categoriaOriginal = String(p.categoria || '')
+      .trim()
+      .toLowerCase();
+
+    return normalizarProduto({
+      id: p.id,
+      nome: p.nome,
+      descricao: p.descricao,
+      preco: p.preco,
+      categoria_id: categorias[categoriaOriginal] || categoriaOriginal,
+      disponibilidade: 'consultar',
+      imagem_url: p.imagem,
+      ativo: p.ativo
+    });
+  }).filter(p => p.ativo);
+}
+
 const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 function sanitizarPedido(v) {
   if (!v || typeof v !== 'object' || Array.isArray(v)) return {};
